@@ -1,0 +1,8 @@
+{
+
+  "imagepath":"/public/assets/images/",
+  "url":"http://93.127.202.230:4000/api/",
+  "base_url" : "/",
+  "base" : ""
+  
+} 
