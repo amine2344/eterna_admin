@@ -285,6 +285,77 @@ module.exports = function (app) {
     });
 
   });
+  app.get(base + '/edit-questionnaire/:id', isUserAllowed, function (req, res) {
+    const questionnaireId = req.params.id;
+    console.log("Getting questionnaire");
+    console.log(questionnaireId);
+
+    var options = {
+        'method': 'GET',
+        'url': urlapi + `getquestionnaire/${questionnaireId}`,
+        'headers': {
+            'Cookie': 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
+        }
+    };
+
+    request(options, function (error, response) {
+        if (error) {
+            console.error('Error fetching questionnaire:', error);
+            return res.status(500).send('Failed to fetch questionnaire');
+        }
+
+        console.log(response.body); // Debugging: Check if response is correct
+
+        // ✅ Properly parse the JSON response
+        var responsedata = JSON.parse(response.body);
+
+        // ✅ Check if response contains the questionnaire object
+        if (!responsedata.questionnaire) {
+            return res.status(404).send('Questionnaire not found');
+        }
+
+        // ✅ Pass the correct data to the view
+        res.locals = { 
+            title: 'Edit Questionnaire', 
+            base: base, 
+            questionnaire: responsedata.questionnaire, 
+            urlapi: urlapi 
+        };
+
+        res.render('Cms/edit-questionnaire');
+    });
+});
+
+
+  app.get(base + '/questionnaires', isUserAllowed, function (req, res) {
+    var options = {
+        'method': 'GET',
+        'url': 'https://eterna.website:4000/api/getallquestionnaires',
+        'headers': {
+            'Cookie': 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
+        }
+    };
+
+    // Fetch data from the API
+    request(options, function (error, response) {
+        if (error) {
+            console.error('Error fetching questionnaires:', error);
+            return res.status(500).send('Error fetching data');
+        }
+
+        // Parse the API response
+        var responsedata = JSON.parse(response.body);
+
+        // Render the EJS template and pass the data
+        res.locals = {
+            title: 'Questionnaires',
+            base: base,
+            questionnaires: responsedata.questionnaires, // Pass the questionnaires array to the template
+            urlapi: urlapi
+        };
+        res.render('Cms/questionnaires'); // Render the EJS template
+    });
+});
   app.get(base + '/cms', isUserAllowed, function (req, res) {
     res.locals = { title: 'CMS List', base: base, urlapi: urlapi };
     res.render('Cms/cms');
@@ -368,7 +439,48 @@ module.exports = function (app) {
       });
     });
   });
+  
+  app.get(base + '/editFormation', isUserAllowed, function (req, res) {
 
+    var id = req.query.id;
+    var optionsblog = {
+      'method': 'GET',
+      'url': urlapi + 'getformation/' + id,
+      'headers': {
+        'Cookie': 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
+      }
+    };
+    var optionscategory = {
+      'method': 'GET',
+      'url': urlapi + 'blogcategory',
+      'headers': {
+        'Cookie': 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
+      }
+    };
+    var optionsuser = {
+      'method': 'GET',
+      'url': urlapi + 'getAllusersfront',
+      'headers': {
+        'Cookie': 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
+      }
+    };
+
+    request(optionsblog, function (error, responsed) {
+      request(optionscategory, function (error, responsedd) {
+        request(optionsuser, function (error, responseuser) {
+
+          if (error) throw new Error(error);
+          console.log(responsed.body);
+          var formation = JSON.parse(responsed.body);
+          var categorydata = JSON.parse(responsedd.body); 
+          var userdata = JSON.parse(responseuser.body);     
+          //console.log('id',id);
+          res.locals = { title: 'Edit Formation', base: base, formation: formation, id: id, categorydata: categorydata, userdata: userdata, imagepath: imagepath, urlapi: urlapi };
+          res.render('Formations/editFormation');
+        });
+      });
+    });
+  });
   app.get(base + '/editblog', isUserAllowed, function (req, res) {
 
     var id = req.query.id;

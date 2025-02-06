@@ -1,7 +1,7 @@
 {
 
   "imagepath":"./public/assets/images/",
-  "url":"http://192.168.43.116:4000/api/",
+  "url":"https://eterna.website:4000/api/",
   "base_url" : "/",
   "base" : ""
   

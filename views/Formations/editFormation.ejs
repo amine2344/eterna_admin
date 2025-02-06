@@ -30,14 +30,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div id="alertmsg"></div>
-                            <form method="post" class="needs-validation" id="addblog" enctype="multipart/form-data"
+                            <form method="post" class="needs-validation" id="addformation" enctype="multipart/form-data"
                                 novalidate>
                                 <div class="row mb-3">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Title <span
                                             style="color: red;">*</span></label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" type="text" id="blogtitile" name="txt_blogtitle"
-                                            value="<%=blog.blog.txt_blogtitle%>" placeholder="Title" required>
+                                        <input class="form-control" type="text" id="formationtitile" name="txt_formationtitle"
+                                            value="<%=formation.txt_formationtitle%>" placeholder="Title" required>
                                     </div>
                                 </div>
 
@@ -47,7 +47,7 @@
                                     </label>
                                     <div class="col-sm-9">
                                         <textarea  class="ckeditor" name="txt_content"
-                                            id="b_description"><%=blog.blog.txt_content%></textarea>
+                                            id="b_description"><%=formation.txt_content%></textarea>
                                             
                                     </div>
                                 </div>
@@ -56,8 +56,8 @@
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Meta Keyword <span
                                             style="color: red;">*</span></label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" type="text" id="meta_keyword" name="txt_blogkeyword"
-                                            value="<%=blog.blog.txt_blogkeyword%>" placeholder="Meta Keyword" required>
+                                        <input class="form-control" type="text" id="meta_keyword" name="txt_formationkeyword"
+                                            value="<%=formation.txt_formationkeyword%>" placeholder="Meta Keyword" required>
                                     </div>
                                 </div>
 
@@ -66,7 +66,7 @@
                                         <span style="color: red;">*</span></label>
                                     <div class="col-sm-9">
                                         <input class="form-control" type="text" id="meta_description"
-                                            name="meta_description" value="<%=blog.blog.meta_description%>"
+                                            name="meta_description" value="<%=formation.meta_description%>"
                                             placeholder="Meta Keyword" required>
                                     </div>
                                 </div>
@@ -92,7 +92,7 @@
                                             style="color: red;">*</span></label>
                                     <div class="col-sm-3">
                                         <select class="form-select select2" aria-label="Default select example"
-                                            id="username" name="blog_userid" required>
+                                            id="username" name="formation_userid" required>
                                             <option value="">Select User</option>
                                             <% if(userdata.length){ for(var i=0;i < userdata.length;i++) { %>
                                                 <option value="<%=userdata[i].id%>">
@@ -125,12 +125,12 @@
                                     <div class="col-sm-9">
                                         <div class="">
                                             <input type="radio" class="form-check-input me-2" name="txt_mediatype"
-                                                id="txt_mediatype" value="1" <% if(blog.blog.txt_mediatype=="1"
+                                                id="txt_mediatype" value="1" <% if(formation.txt_mediatype=="1"
                                                 ){%>checked <% } %>>Image
 
                                                 <input type="radio" class="form-check-input ms-2 me-2"
                                                     name="txt_mediatype" id="txt_mediatype" value="2" <%
-                                                    if(blog.blog.txt_mediatype=="2" ){%>checked <% } %>>Video
+                                                    if(formation.txt_mediatype=="2" ){%>checked <% } %>>Video
                                         </div>
                                     </div>
                                 </div>
@@ -138,14 +138,14 @@
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Video URL</label>
                                     <div class="col-sm-9">
                                         <input class="form-control" type="text" id="videourl" name="txt_mediautub"
-                                            value="<%=blog.blog.txt_mediautub%>" placeholder="Video URL" required>
+                                            value="<%=formation.txt_mediautub%>" placeholder="Video URL" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Source </label>
                                     <div class="col-sm-9">
                                         <input class="form-control" type="text" id="source" name="sources"
-                                            value="<%=blog.blog.sources%>" placeholder="Source" required>
+                                            value="<%=formation.sources%>" placeholder="Source" required>
                                     </div>
                                 </div>
 
@@ -155,8 +155,7 @@
                                     <div class="col-sm-9">
                                         <div id="dvPreview"></div>
                                         <input class="form-control" type="file" id="imageval">
-                                        <input class="custom-file-input" type="file" id="changeImg"
-                                            onclick="this.value=null;" hidden>
+                                        <input class="custom-file-input" type="file" id="changeImg" onclick="this.value=null;" hidden>
                                         <span style="display:block;" class="mt-1">Note : Please upload 862*574 size image</span>
                                     </div>
                                 </div>
@@ -174,34 +173,15 @@
                                 </div>
 
 
-                                <div class="row mb-3">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Add Tags<span
-                                            style="color: red;">*</span>
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input id="key" type="button" class="btn btn-success" value="Add Tags"
-                                            name="tags[]" />
-                                        <div id="TextBoxkey" style="margin-top: 1%;">
-                                            <% if(blog.tag.length){ for(var i=0;i < blog.tag.length;i++) { %>
-                                                <div>
-                                                    <input name="tags[]" style="margin-top: 1%;width:80%;float:left"
-                                                        id="blog_tag" class="form-control" required type="text"
-                                                        value="<%=blog.tag[i].tags%>" />
-                                                    <input type="button" value="Remove"
-                                                        style="margin-top: 1%;margin-left: 1%;float:left"
-                                                        class="remove btn btn-danger" />
-                                                </div>
-                                                <% } } %>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                
                                 <div class="row mb-3">
                                     <div>
-                                        <button type="button" onclick="editblog()"
+                                        <button type="button" onclick="editformation()"
                                             class="btn btn-primary waves-effect waves-light me-1">
                                             Submit
                                         </button>
-                                        <a href="<%=base%>/blog"><button type="button"
+                                        <a href="<%=base%>/formation"><button type="button"
                                                 class="btn btn-secondary waves-effect">
                                                 Back
                                             </button></a>
@@ -211,20 +191,22 @@
 
                         </div>
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
+                </div> 
+            </div> 
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
             <script>
                 $(document).ready(function () {
-                    $('#username').val('<%=blog.blog.blog_userid%>');
-                    $('#columns').val('<%=blog.blog.columns%>');
-                    $('#categoryId').val('<%=blog.blog.cat_id%>');
+                    console.log(formation);
+                    
+                    $('#username').val('<%=formation.formation_userid%>');
+                    $('#columns').val('<%=formation.columns%>');
+                    $('#categoryId').val('<%=formation.cat_id%>');
                     // $('#rel_porducts').select2().select2().val(relporductsdata);
-                    $('#username').select2().val('<%=blog.blog.blog_userid%>');
-                    $('#columns').select2().val('<%=blog.blog.columns%>');
-                    $('#categoryId').select2().val('<%=blog.blog.cat_id%>');
+                    $('#username').select2().val('<%=formation.formation_userid%>');
+                    $('#columns').select2().val('<%=formation.columns%>');
+                    $('#categoryId').select2().val('<%=formation.cat_id%>');
                     getImage();
                     tgetImage();
                 });
@@ -240,35 +222,35 @@
                     });
                 });
                 function GenerateTextkeybox(value) {
-                    return '<input name = "tags[]" id="blog_tag" style="margin-top: 1%;width:80%;float:left" class="form-control" required type="text" value = "' + value + '" /> ' +
+                    return '<input name = "tags[]" id="formation_tag" style="margin-top: 1%;width:80%;float:left" class="form-control" required type="text" value = "' + value + '" /> ' +
                         '<input type="button" value="Remove" style="margin-top: 1%;margin-left: 1%;float:left" class="remove btn btn-danger" />'
                 }
 
-                function editblog() {
+                function editformation() {
                     //alert('hii');
-                    var txt_blogtitle = $('#blogtitile').val();
+                    var txt_formationtitle = $('#formationtitile').val();
                     var txt_content = $('#b_description').val();
-                    var txt_blogkeyword = $('#meta_keyword').val();
+                    var txt_formationkeyword = $('#meta_keyword').val();
                     var meta_description = $('#meta_description').val();
                     var cat_id = $('#categoryId').val();
-                    var blog_userid = $('#username').val();
-                    var blog_tag = $('#blog_tag').val();
-                    if ($('#blog_tag').val() == undefined) {
-                        blog_tag = 0;
+                    var formation_userid = $('#username').val();
+                    var formation_tag = $('#formation_tag').val();
+                    if ($('#formation_tag').val() == undefined) {
+                        formation_tag = 0;
                     }
                     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
-                    if (!txt_blogtitle || !txt_blogkeyword || !meta_description || !cat_id || !blog_userid || !blog_tag) {
+                    if (!txt_formationtitle || !txt_formationkeyword || !meta_description || !cat_id || !formation_userid || !formation_tag) {
                         $(window).scrollTop(0);
                         document.getElementById('alertmsg').innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Failed!</strong>All Marked Fields Are Required.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>'
                         return false;
                     }
-                    var frm = $('#addblog').serialize();
+                    var frm = $('#addformation').serialize();
                     $.ajax({
                         type: 'PUT',
                         dataType: 'json',
-                        url: '<%=urlapi%>updateblogadmin/<%=id%>',
+                        url: '<%=urlapi%>updateformationadmin/<%=id%>',
                         data: frm,
 
                         success: function (data) {
@@ -344,12 +326,12 @@
                     //console.log(files);
                 });
                 function getImage() {
-                    if ('<%=blog.blog.txt_mediaurl%>' != '') {
+                    if ('<%=formation.txt_mediaurl%>' != '') {
                         document.getElementById('imageval').style.display = 'none';
                         document.getElementById('changeImg').style.display = 'inline-block';
 
-                        var image = '<%=imagepath%>user/<%=blog.blog.txt_mediaurl%>';
-                        var imageName = '<%=blog.blog.txt_mediaurl%>'
+                        var image = '<%=imagepath%>user/<%=formation.txt_mediaurl%>';
+                        var imageName = '<%=formation.txt_mediaurl%>'
                         $("<span class=\"pip\">" +
                             "<img id='user_img' height='100px;' width= '100px' class=\"imageThumb\" src=\"" + image + "\" title=\"" + imageName + "\"/>" +
                             "<br/><br/><label for='changeImg' id='labelId' class='btn btn-secondary me-2' >Change</label>" +
@@ -416,12 +398,12 @@
                     //console.log(files);
                 });
                 function tgetImage() {
-                    if ('<%=blog.blog.thumbimage_name%>' != '') {
+                    if ('<%=formation.thumbimage_name%>' != '') {
                         document.getElementById('timageval').style.display = 'none';
                         document.getElementById('tchangeImg').style.display = 'inline-block';
 
-                        var image = '<%=imagepath%>user/thumb/<%=blog.blog.thumbimage_name%>';
-                        var imageName = '<%=blog.blog.thumbimage_name%>'
+                        var image = '<%=imagepath%>user/thumb/<%=formation.thumbimage_name%>';
+                        var imageName = '<%=formation.thumbimage_name%>'
                         $("<span class=\"tpip\">" +
                             "<img id='user_img' height='100px;' width= '100px' class=\"imageThumb\" src=\"" + image + "\" title=\"" + imageName + "\"/>" +
                             "<br/><br/><label for='tchangeImg' id='tlabelId' class='btn btn-secondary me-2' >Change</label>" +
@@ -438,12 +420,15 @@
             </script>
             <script src="/public/assets/libs/sweetalert2/sweetalert2.min.js"></script>
 
-            <!-- Sweet alert init js-->
+            
+            
             <script src="/public/assets/js/pages/sweet-alerts.init.js"></script>
-            <!-- <script  src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>-->
+            
+            
            
 
-            <!-- Initialize the editor. -->
+            
+            
             <script>
                
                    

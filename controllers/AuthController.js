@@ -72,64 +72,64 @@ module.exports = function (app, appExpress) {
 		});
 	   }
 	});
-//	app.post('/post-login', urlencodeParser, function (req, res) {
-	
-//		if(req.body.captch === req.body.captchtext)
-//		{
-//			var options = {
-//				'method': 'POST',
-//				'url': urlapi+'/addlogin',
-//				'body': JSON.stringify({
-//					username:req.body.email,
-//					password: req.body.password
-//				  }),
-//				'headers': {
-//				  'Content-Type': 'application/json',
-//				  'Cookie': 'refreshToken=f29c019c3f1654b1d5a4ae04fd610b5f41711384e56809ee2e5ef4bd0ccc497c919bef0998a8c3d4'
-//				},
-				
-				
-				
-//				};
-//				request(options, function (error, response) {
-//				if (error) throw new Error(error);
-//				var data=JSON.parse(response.body);
-//				console.log('data',data)
-//				if(data.status=='success')
-//				{
-//					let users = [
-//						{ id: 1, username: data.datam.username, password: data.datam.password, email: data.datam.email }
-//					];
-//					req.body.email=data.datam.email;
-//					req.body.email=data.datam.password
-//					const validUser = data.datam;
-//				}
-                //
-		//	if (data.status=='success') {
-//
-		//		// Assign value in session
-		//		 sess = req.session;
-		//		 sess.user = data.datam;
-	//
-		//		 res.redirect(base+'/');
-				//
-	//
-//			} else {
-//				req.flash('error', 'Incorrect email or password!');
-//				res.redirect(base+'/login');
-//			}
-//		});
-//	}
-//		else {
-//			req.flash('error', 'Enter correct Captcha!');
-//			res.redirect(base+'/login');
-//		}
-//	});
-
 	app.post('/post-login', urlencodeParser, function (req, res) {
+	
+		if(req.body.captch === req.body.captchtext)
+		{
+			var options = {
+				'method': 'POST',
+				'url': urlapi+'/addlogin',
+				'body': JSON.stringify({
+					username:req.body.email,
+					password: req.body.password
+				  }),
+				'headers': {
+				  'Content-Type': 'application/json',
+				  'Cookie': 'refreshToken=f29c019c3f1654b1d5a4ae04fd610b5f41711384e56809ee2e5ef4bd0ccc497c919bef0998a8c3d4'
+				},
+				
+				
+				
+				};
+				request(options, function (error, response) {
+				if (error) throw new Error(error);
+				var data=JSON.parse(response.body);
+				console.log('data',data)
+				if(data.status=='success')
+				{
+					let users = [
+						{ id: 1, username: data.datam.username, password: data.datam.password, email: data.datam.email }
+					];
+					req.body.email=data.datam.email;
+					req.body.email=data.datam.password
+					const validUser = data.datam;
+				}
+                
+			if (data.status=='success') {
+
+				 //Assign value in session
+				 sess = req.session;
+				 sess.user = data.datam;
+	
+				 res.redirect(base+'/');
+				
+	
+			} else {
+				req.flash('error', 'Incorrect email or password!');
+				res.redirect(base+'/login');
+			}
+		});
+	}
+		else {
+			req.flash('error', 'Enter correct Captcha!');
+			res.redirect(base+'/login');
+		}
+	}); 
+
+	/* app.post('/post-login', urlencodeParser, function (req, res) {
 
     // Condition to skip login (you can replace this with any condition you prefer)
-    const skipLogin = true;  // Or use some other condition, like checking a hardcoded value
+    const skipLogin = false;  // Or use some other condition, like checking a hardcoded value
 
     if (skipLogin) {
         // Directly log the user in by setting the session data
@@ -185,7 +185,7 @@ module.exports = function (app, appExpress) {
         req.flash('error', 'Enter correct Captcha!');
         res.redirect(base + '/login');
     }
-});
+}); */
 
 
 	app.get('/logout', function (req, res) {
