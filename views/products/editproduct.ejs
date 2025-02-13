@@ -1,0 +1,127 @@
+<%- contentFor('HeaderCss') %>
+
+<!-- DataTables -->
+<link href="/public/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+
+<style>
+    td {
+        white-space: normal !important;
+    }
+    .product-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4>Edit Product</h4>
+                <form id="editProductForm">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" class="form-control" id="productName" name="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="scientificRecommendation">Scientific Recommendation</label>
+                        <textarea class="form-control" id="scientificRecommendation" name="scientificRecommendation"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="number" class="form-control" id="stock" name="stock" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUrl">Image URL</label>
+                        <input type="text" class="form-control" id="imageUrl" name="imageUrl">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- contentFor('FooterJs') %>
+
+<script>
+$(document).ready(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id'); // Get the product ID from URL
+
+    // Fetch the product data based on the product ID
+    $.ajax({
+        type: 'GET',
+        url: '<%=urlapi%>getproduct/' + productId,
+        success: function(data) {
+            if (data.product) {
+                $('#productName').val(data.product.productName);
+                $('#description').val(data.product.description);
+                $('#scientificRecommendation').val(data.product.scientificRecommendation);
+                $('#price').val(data.product.price);
+                $('#stock').val(data.product.stock);
+                $('#imageUrl').val(data.product.imageUrl || '');
+            }
+        },
+        error: function(err) {
+            console.error('Error fetching product data:', err);
+            alert('Failed to fetch product data!');
+        }
+    });
+
+    // Submit form for product update
+    $('#editProductForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const updatedProduct = {
+            productName: $('#productName').val(),
+            description: $('#description').val(),
+            scientificRecommendation: $('#scientificRecommendation').val(),
+            price: $('#price').val(),
+            stock: $('#stock').val(),
+            imageUrl: $('#imageUrl').val(),
+        };
+
+        $.ajax({
+            type: 'PUT',
+            url: '<%=urlapi%>editproduct/' + productId,
+            data: updatedProduct,
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert('Product updated successfully!');
+                    window.location.href = '<%=base%>/products'; // Redirect to product list page
+                } else {
+                    alert('Failed to update product!');
+                }
+            },
+            error: function(err) {
+                console.error('Error updating product:', err);
+                alert('An error occurred while updating the product!');
+            }
+        });
+    });
+});
+</script>
+
+<script src="/public/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+<script src="/public/assets/libs/jszip/jszip.min.js"></script>
+<script src="/public/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<%- contentFor('BottomJs') %>

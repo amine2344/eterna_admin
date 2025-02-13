@@ -375,6 +375,11 @@ module.exports = function (app) {
     res.render('products/addproduct');
   });
   
+  app.get(base + '/editproduct', isUserAllowed, function (req, res) {
+    res.locals = { title: 'Edit Product', base: base, urlapi: urlapi };
+    res.render('products/editproduct');
+  });
+  
   
   app.get(base + '/banner', isUserAllowed, function (req, res) {
 
