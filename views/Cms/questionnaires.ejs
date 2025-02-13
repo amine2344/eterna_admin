@@ -111,7 +111,7 @@
                 if (result.isConfirmed) {
                     // Perform AJAX request to delete the questionnaire
                     $.ajax({
-                        url: '<%=base%>/delete-questionnaire/' + id,
+                        url: '<%=urlapi%>/delete-questionnaire/' + id,
                         method: 'DELETE',
                         success: function(response) {
                             Swal.fire(

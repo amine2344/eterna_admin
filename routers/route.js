@@ -8,6 +8,7 @@ const config = require('../config.json');
 const urlapi = config.url;
 const imagepath = config.imagepath;
 const base = config.base;
+const baseurl = config.url;
 const front = config.front;
 
 const fs = require("fs");
@@ -325,12 +326,15 @@ module.exports = function (app) {
         res.render('Cms/edit-questionnaire');
     });
 });
-
+  app.get(base + '/add-questionnaire', isUserAllowed, function (req, res) {
+    res.locals = { title: 'Add Questionnaire', base: base, urlapi: urlapi };
+    res.render('Cms/addquestionnaire');
+  });
 
   app.get(base + '/questionnaires', isUserAllowed, function (req, res) {
     var options = {
         'method': 'GET',
-        'url': 'https://eterna.website:4000/api/getallquestionnaires',
+        'url': `${baseurl}getallquestionnaires`,
         'headers': {
             'Cookie': 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
         }
@@ -359,6 +363,16 @@ module.exports = function (app) {
   app.get(base + '/cms', isUserAllowed, function (req, res) {
     res.locals = { title: 'CMS List', base: base, urlapi: urlapi };
     res.render('Cms/cms');
+  });
+
+  app.get(base + '/products', isUserAllowed, function (req, res) {
+    res.locals = { title: 'Products List', base: base, urlapi: urlapi };
+    res.render('products/products');
+  });
+
+  app.get(base + '/addproduct', isUserAllowed, function (req, res) {
+    res.locals = { title: 'Products List', base: base, urlapi: urlapi };
+    res.render('products/addproduct');
   });
   
   
@@ -443,9 +457,9 @@ module.exports = function (app) {
   app.get(base + '/editFormation', isUserAllowed, function (req, res) {
 
     var id = req.query.id;
-    var optionsblog = {
+    var formation = {
       'method': 'GET',
-      'url': urlapi + 'getformation/' + id,
+      'url': urlapi + '/getformation/' + id,
       'headers': {
         'Cookie': 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
       }
@@ -465,7 +479,7 @@ module.exports = function (app) {
       }
     };
 
-    request(optionsblog, function (error, responsed) {
+    request(formation, function (error, responsed) {
       request(optionscategory, function (error, responsedd) {
         request(optionsuser, function (error, responseuser) {
 

@@ -37,7 +37,7 @@
                                             style="color: red;">*</span></label>
                                     <div class="col-sm-9">
                                         <input class="form-control" type="text" id="formationtitile" name="txt_formationtitle"
-                                            value="<%=formation.txt_formationtitle%>" placeholder="Title" required>
+                                            value="<%=formation.formation_title%>" placeholder="Title" required>
                                     </div>
                                 </div>
 
@@ -87,7 +87,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-3">
+                                <!-- <div class="row mb-3">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Select User <span
                                             style="color: red;">*</span></label>
                                     <div class="col-sm-3">
@@ -102,7 +102,7 @@
                                                 <% } } %>
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="row mb-3">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Columns</label>
@@ -181,7 +181,7 @@
                                             class="btn btn-primary waves-effect waves-light me-1">
                                             Submit
                                         </button>
-                                        <a href="<%=base%>/formation"><button type="button"
+                                        <a href="<%=base%>/formations"><button type="button"
                                                 class="btn btn-secondary waves-effect">
                                                 Back
                                             </button></a>
@@ -198,13 +198,13 @@
 
             <script>
                 $(document).ready(function () {
-                    console.log(formation);
+                    console.log('<%=formation%>');
                     
-                    $('#username').val('<%=formation.formation_userid%>');
+                    //$('#username').val('<%=formation.formation_userid%>');
                     $('#columns').val('<%=formation.columns%>');
                     $('#categoryId').val('<%=formation.cat_id%>');
                     // $('#rel_porducts').select2().select2().val(relporductsdata);
-                    $('#username').select2().val('<%=formation.formation_userid%>');
+                    //$('#username').select2().val('<%=formation.formation_userid%>');
                     $('#columns').select2().val('<%=formation.columns%>');
                     $('#categoryId').select2().val('<%=formation.cat_id%>');
                     getImage();
@@ -233,7 +233,7 @@
                     var txt_formationkeyword = $('#meta_keyword').val();
                     var meta_description = $('#meta_description').val();
                     var cat_id = $('#categoryId').val();
-                    var formation_userid = $('#username').val();
+                    //var formation_userid = $('#username').val();
                     var formation_tag = $('#formation_tag').val();
                     if ($('#formation_tag').val() == undefined) {
                         formation_tag = 0;
@@ -241,7 +241,7 @@
                     for (instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
     }
-                    if (!txt_formationtitle || !txt_formationkeyword || !meta_description || !cat_id || !formation_userid || !formation_tag) {
+                    if (!txt_formationtitle || !txt_formationkeyword || !meta_description || !cat_id  ) {
                         $(window).scrollTop(0);
                         document.getElementById('alertmsg').innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Failed!</strong>All Marked Fields Are Required.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>'
                         return false;
@@ -267,7 +267,8 @@
 
                         },
                         error: function (request, status, error) {
-                            console.log('url', url);
+                            
+                            
                             var string = request.responseJSON.message.split(",");
                             document.getElementById('alertmsg').innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Failed!</strong> ' + string[0] + '.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>'
                         }

@@ -71,10 +71,10 @@ $( document ).ready(function() {
 function addcms(){
 
 	var page_name=$('#page_name').val();
-		var page_slug=$('#page_slug').val();
+	var page_slug=$('#page_slug').val();
 		
-        for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
+    for (instance in CKEDITOR.instances) {
+    CKEDITOR.instances[instance].updateElement();
     }
 	if(!page_name ||  !page_slug )
 	{
@@ -116,7 +116,7 @@ function addcms(){
 
 <script>
    
-</script> 
+</script>   
 
 
 <%- contentFor('FooterJs') %>
