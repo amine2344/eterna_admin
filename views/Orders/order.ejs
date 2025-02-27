@@ -1,0 +1,264 @@
+<%- contentFor('HeaderCss') %>
+
+<!-- DataTables -->
+<link href="/public/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<!-- Responsive datatable examples -->
+<link href="/public/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+
+<style>
+    td {
+        white-space: normal !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="alertmsg"></div>
+                <div style="float: right; margin-right: 1%;" class="btn-group me-1">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Action <i class="mdi mdi-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" onclick="updateOrderStatus('Delivered')" style="cursor:pointer;">Mark as Delivered</a>
+                        <a class="dropdown-item" onclick="updateOrderStatus('Pending')" style="cursor:pointer;">Mark as Pending</a>
+                        <a class="dropdown-item" onclick="updateOrderStatus('Cancelled')" style="cursor:pointer;">Mark as Cancelled</a>
+                    </div>
+                </div>
+
+                <table id="datatable" class="table table-striped dt-responsive nowrap table-vertical" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th><input type="checkbox" id="master"></th>
+                            <th>Order ID</th>
+                            <th>Product Name</th>
+                            <th>User Name</th>
+                            <th>Total Price</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Order Details Modal -->
+        <div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title mt-0" id="myModalLabel">Order Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-0">
+                                <tbody>
+                                    <tr><th>Order ID</th><td><span id="orderId"></span></td></tr>
+                                    <tr><th>Product Name</th><td><span id="productName"></span></td></tr>
+                                    <tr><th>User Name</th><td><span id="userName"></span></td></tr>
+                                    <tr><th>Total Price</th><td><span id="totalPrice"></span></td></tr>
+                                    <tr><th>Quantity</th><td><span id="quantity"></span></td></tr>
+                                    <tr><th>Status</th><td><span id="status"></span></td></tr>
+                                    <tr><th>Created At</th><td><span id="createdAt"></span></td></tr>
+                                    <tr><th>Shipping Address</th><td><span id="shippingAddress"></span></td></tr>
+                                    <tr><th>Email</th><td><span id="email"></span></td></tr>
+                                    <tr><th>Phone</th><td><span id="phone"></span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+
+<%- contentFor('FooterJs') %>
+
+<script>
+// Declare table globally
+let table;
+
+$(document).ready(function() {
+    getOrderData();
+});
+
+function viewdata(orderId, productName, userName, totalPrice, quantity, status, createdAt, shippingAddress, email, phone) {
+    document.getElementById('orderId').innerHTML = orderId;
+    document.getElementById('productName').innerHTML = productName;
+    document.getElementById('userName').innerHTML = userName || 'N/A';
+    document.getElementById('totalPrice').innerHTML = "$" + totalPrice;
+    document.getElementById('quantity').innerHTML = quantity;
+    document.getElementById('status').innerHTML = status;
+    document.getElementById('createdAt').innerHTML = new Date(createdAt).toLocaleString();
+    document.getElementById('shippingAddress').innerHTML = shippingAddress || 'N/A';
+    document.getElementById('email').innerHTML = email || 'N/A';
+    document.getElementById('phone').innerHTML = phone || 'N/A';
+}
+
+function getOrderData() {
+    table = $('#datatable').DataTable({
+        lengthChange: false,
+        bInfo: true,
+        buttons: [
+            { extend: 'excel', text: 'Export Orders' }
+        ]
+    });
+
+    table.buttons().container().appendTo('#datatable_wrapper .col-md-6:eq(0)');
+    $(".dataTables_length select").addClass('form-select form-select-sm');
+
+    table.clear().draw();
+
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: '<%=urlapi%>orders',
+        success: function(data) {
+            console.log(data);
+            
+            if (!data.success || !data.orders) {
+                console.error("No orders found or invalid response:", data);
+                document.getElementById('alertmsg').innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert"><strong>Warning!</strong> ' + data.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+                return;
+            }
+
+            for (var i = 0; i < data.orders.length; i++) {
+                var order = data.orders[i];
+                
+                var statusBadge = order.status === 'Delivered' 
+                    ? '<span class="badge bg-success">Delivered</span>' 
+                    : order.status === 'Pending' 
+                    ? '<span class="badge bg-warning">Pending</span>' 
+                    : '<span class="badge bg-danger">Cancelled</span>';
+                
+                var shippingAddress = `${order.street1 || ''} ${order.street2 || ''}, ${order.city || ''}, ${order.state || ''} ${order.zip || ''}, ${order.country || ''}`.trim() || 'N/A';
+                
+                var action = `
+                    <a onclick="viewdata('${order.orderId}', '${order.productName}', '${order.userName}', '${order.totalPrice}', '${order.quantity}', '${order.status}', '${order.createdAt}', '${shippingAddress}', '${order.email}', '${order.phone}')" 
+                        data-bs-toggle="modal" data-bs-target="#myModal" class="me-3 text-muted">
+                        <i class="mdi mdi-eye font-size-18"></i>
+                    </a>`;
+                
+                var checkbox = `<input type="checkbox" class="sub_chk" data-id="${order.orderId}">`;
+                
+                table.row.add([
+                    '', 
+                    checkbox, 
+                    order.orderId, 
+                    order.productName, 
+                    order.userName || 'N/A', 
+                    "$" + order.totalPrice, 
+                    order.quantity, 
+                    statusBadge, 
+                    new Date(order.createdAt).toLocaleString(), 
+                    action
+                ]);
+            }
+            table.draw();
+        },  
+        error: function(request, status, error) {
+            console.error("Error fetching orders:", error);
+            document.getElementById('alertmsg').innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Error!</strong> Failed to fetch orders.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        }
+    });
+
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+$('#master').on('click', function (e) {
+    if ($(this).is(':checked', true)) {
+        $(".sub_chk").prop('checked', true);
+    } else {
+        $(".sub_chk").prop('checked', false);
+    }
+});
+
+function updateOrderStatus(newStatus) {
+    var selectedIds = [];
+    $(".sub_chk:checked").each(function () {
+        selectedIds.push($(this).attr('data-id'));
+    });
+
+    if (selectedIds.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            text: 'Please select at least one order.'
+        });
+        return;
+    }
+
+    Swal.fire({
+        text: "Are you sure you want to update the status of " + selectedIds.length + " order(s) to '" + newStatus + "'?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#4ac18e",
+        cancelButtonColor: "#f46a6a",
+        confirmButtonText: "Update"
+    }).then(function (result) {
+        if (result.value) {
+            let failedUpdates = 0;
+            let completedUpdates = 0;
+
+            selectedIds.forEach(id => {
+                $.ajax({
+                    type: 'PUT',
+                    url: '<%=urlapi%>update-order/' + id,
+                    contentType: 'application/json',
+                    data: JSON.stringify({ status: newStatus }),
+                    success: function(response) {
+                        completedUpdates++;
+                        if (completedUpdates + failedUpdates === selectedIds.length) {
+                            table.destroy();
+                            getOrderData();
+                            if (failedUpdates === 0) {
+                                document.getElementById('alertmsg').innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> ' + completedUpdates + ' order(s) status updated to ' + newStatus + ' successfully.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+                            } else {
+                                document.getElementById('alertmsg').innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert"><strong>Partial Success!</strong> ' + completedUpdates + ' order(s) updated, ' + failedUpdates + ' failed.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+                            }
+                        }
+                    },
+                    error: function(request, status, error) {
+                        failedUpdates++;
+                        console.error(`Failed to update order ${id}:`, error);
+                        if (completedUpdates + failedUpdates === selectedIds.length) {
+                            table.destroy();
+                            getOrderData();
+                            document.getElementById('alertmsg').innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert"><strong>Partial Success!</strong> ' + completedUpdates + ' order(s) updated, ' + failedUpdates + ' failed.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+                        }
+                    }
+                });
+            });
+        }
+    });
+}
+</script>
+
+<script src="/public/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+<script src="/public/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/public/assets/libs/jszip/jszip.min.js"></script>
+<script src="/public/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+<script src="/public/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/public/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<%- contentFor('BottomJs') %>

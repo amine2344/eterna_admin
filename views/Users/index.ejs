@@ -57,7 +57,7 @@
                                         <th> First Name</th>
                                         <th> Last Name</th>
                                        <th> Email</th>
-                                        <th> Profile Image</th>
+                                        <!-- <th> Profile Image</th> -->
                                         <th>Status</th>
                                         <th>Options</th>
                                     </tr>
@@ -165,10 +165,10 @@
                                                     <th style="width: 50%;">Phone no</th>
                                                     <td><span id="mobile">First Name</span></td>
                                                 </tr>
-                                                <tr>
+                                                <!-- <tr>
                                                     <th style="width: 50%;">Profile Image</th>
                                                     <td><span id="image">First Name</span></td>
-                                                </tr>
+                                                </tr> -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -231,7 +231,7 @@
                                 else {
                                     var status = '<span class="badge bg-danger">Rejected</span>'
                                 }
-                                if (data[i].image == '') {
+                                /* if (data[i].image == '') {
                                     if (data[i].fb_profile_image != '') {
                                         var image = '<img height="70px" width="70px" src="' + data[i].fb_profile_image + '"/>';
                                         var imagedata = data[i].fb_profile_image;
@@ -246,7 +246,7 @@
                                         
                                     }
                                 }
-                                else {
+                                 *//* else {
                                     var image = '<img height="70px" width="70px" src="<%=imagepath%>user/thumb/' + data[i].image + '"/>';
                                     var imagedata = '<%=imagepath%>user/thumb/' + data[i].image;
                                 }
@@ -255,9 +255,9 @@
                                 var image='<img height="70px" width="70px" src="<%=imagepath%>user/thumb/Avatars-80_2.png"/>'
                                          var imagedata='<%=imagepath%>user/thumb/Avatars-80_2.png'
                                 }
-                                var action = '<a style="cursor:pointer;" onclick="viewdata(\'' + data[i].fname + '\',\'' + data[i].lname + '\',\'' + data[i].username + '\',\'' + data[i].email + '\',\'' + data[i].mobile + '\',\'' + imagedata + '\')"  data-bs-toggle="modal" data-bs-target="#myModal" class="me-3 text-muted"><i class="mdi mdi-eye font-size-18"></i></a><a style="cursor:pointer;" href="<%=base%>/updateuser?id=' + data[i].id + '" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a><a style="cursor:pointer;" onclick="deleteuser(' + data[i].id + ')" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>'
+                                 */var action = '<a style="cursor:pointer;" onclick="viewdata(\'' + data[i].fname + '\',\'' + data[i].lname + '\',\'' + data[i].username + '\',\'' + data[i].email + '\',\'' + data[i].mobile + /* '\',\'' + imagedata + */ '\')"  data-bs-toggle="modal" data-bs-target="#myModal" class="me-3 text-muted"><i class="mdi mdi-eye font-size-18"></i></a><a style="cursor:pointer;" href="<%=base%>/updateuser?id=' + data[i].id + '" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a><a style="cursor:pointer;" onclick="deleteuser(' + data[i].id + ')" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>'
                                 var checkbox = '<input type="checkbox" class="sub_chk" data-id="' + data[i].id + '">'
-                                table.row.add(['', checkbox, data[i].fname, data[i].lname, data[i].email, image,  status, action]);
+                                table.row.add(['', checkbox, data[i].fname, data[i].lname, data[i].email,/*  image, */  status, action]);
 
                             }
                             table.draw();

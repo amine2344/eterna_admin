@@ -1,117 +1,130 @@
 <!-- ========== Left Sidebar Start ========== -->
 <div class="vertical-menu">
-
     <div data-simplebar class="h-100">
-
         <!--- Sidemenu -->
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title"><%=translation.Main%></li>
 
-<!-- dashboard route  -->
+                <!-- Dashboard route -->
                 <li>
                     <a href="<%=base%>/" class="waves-effect">
                         <i class="mdi mdi-view-dashboard"></i>
                         <span> <%=translation.Dashboard%> </span>
                     </a>
-                
                 </li>
-<!-- users list route  -->
+
+                <!-- Users list route -->
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fas fa-users"></i>
                         <span>User </span>
+                        <span class="badge bg-success ms-2"><%= totaldata.users || 0 %></span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="<%=base%>/users">Users</a></li>
                     </ul>
                 </li>
-                <!-- banners list route view -->
+
+                <!-- Banners list route view -->
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fas fa-file-image"></i>
                         <span>Banners </span>
+                        <!-- Assuming no count for banners, add if available -->
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="<%=base%>/banner">Banners</a></li>
-                        
-                        
                     </ul>
                 </li>
-                <!-- blog view -->
-                <li>
-                    <!-- <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="fab fa-blogger"></i>
-                        <span>Blog </span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="<%=base%>/blog">Blog</a></li>
-                        <li><a href="<%=base%>/manageblogcategory">Manage blog Categories</a></li>
-                        <li><a href="<%=base%>/blognewslatter">Blog Newsletter</a></li>
-                        <li><a href="<%=base%>/blogcomments">Blog Comments</a></li>
-                    </ul>
-                </li> -->
-<!-- foramtions page -->
+
+                <!-- Formations page -->
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fab fa-blogger"></i>
                         <span>Formations</span>
+                        <!-- Assuming no count for formations, add if available -->
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="<%=base%>/formations">Formations</a></li>
                         <li><a href="<%=base%>/manageblogcategory">Manage Formations Categories</a></li>
-                        <!-- <li><a href="<%=base%>/blognewslatter">Blog Newsletter</a></li>
-                        <li><a href="<%=base%>/blogcomments">Blog Comments</a></li>-->
                     </ul>
                 </li>
 
-                <!-- Questions  -->
+                <!-- Questions -->
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fa fa-question-circle" aria-hidden="true"></i>
-
                         <span>Questions</span>
+                        <!-- Assuming no count for questions, add if available -->
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="<%=base%>/questionnaires">Questionnaire</a></li>
-                        <!-- <li><a href="<%=base%>/manageblogcategory">Manage Formations Categories</a></li> -->
-                        <!-- <li><a href="<%=base%>/blognewslatter">Blog Newsletter</a></li>
-                        <li><a href="<%=base%>/blogcomments">Blog Comments</a></li>-->
                     </ul>
                 </li>
 
+                <!-- Products -->
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-
-                        <span>products</span>
+                        <span>Products</span>
+                        <span class="badge bg-success ms-2"><%= totaldata.products || 0 %></span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="<%=base%>/products">products List</a></li>
-                        <!-- <li><a href="<%=base%>/manageblogcategory">Manage Formations Categories</a></li> -->
-                        <!-- <li><a href="<%=base%>/blognewslatter">Blog Newsletter</a></li>
-                        <li><a href="<%=base%>/blogcomments">Blog Comments</a></li>-->
+                        <li><a href="<%=base%>/products">Products List</a></li>
                     </ul>
                 </li>
-               
+
+                <!-- Notifications list route -->
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications </span>
+                        <!-- Assuming no count for notifications, add if available -->
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="<%=base%>/notifications">Notification</a></li>
+                    </ul>
+                </li>
+
+                <!-- Orders page route -->
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fas fa-truck"></i>
+                        <span>Orders </span>
+                        <span class="badge bg-success ms-2"><%= totaldata.orders || 0 %></span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="<%=base%>/orders">Orders List</a></li>
+                    </ul>
+                </li>
+
+                <!-- CMS -->
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fab fa-grav"></i>
                         <span>CMS </span>
+                        <!-- Assuming no count for CMS pages, add if available -->
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="<%=base%>/cms">Pages</a></li>
-                      <!--   <li><a href="<%=base%>/testimonial">Testimonial</a></li>-->
                         <li><a href="<%=base%>/contact">Contact</a></li>
                         <li><a href="<%=base%>/faq">Faq</a></li>
                     </ul>
                 </li>
-               
-           
 
-        
-               
+                <!-- Shipments -->
+                <!-- <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fas fa-shipping-fast"></i>
+                        <span>Shipments </span>
+                        <span class="badge bg-success ms-2"><%= totaldata.shipments || 0 %></span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="<%=base%>/shipments">Shipments List</a></li>
+                    </ul>
+                </li> -->
             </ul>
         </div>
         <!-- Sidebar -->

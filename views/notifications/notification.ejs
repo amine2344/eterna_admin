@@ -1,0 +1,281 @@
+<%- contentFor('HeaderCss') %>
+
+<!-- DataTables -->
+<link href="/public/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<!-- Responsive datatable examples -->
+<link href="/public/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="alertmsg"></div>
+                <div style="float: right;" class="btn-group">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Action <i class="mdi mdi-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" onclick="sendNotification()" style="cursor:pointer;">Send Notification</a>
+                    </div>
+                </div>
+
+                <table id="datatable-buttons" class="table table-striped dt-responsive nowrap table-vertical" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th><input type="checkbox" id="master"></th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mt-4">
+        <!-- Notification Modal -->
+        <div id="notificationModal" class="modal fade" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title mt-0" id="notificationModalLabel">Send Notification</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="notificationForm">
+                            <div class="mb-3">
+                                <label for="notificationTitle" class="form-label">Title <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="notificationTitle" name="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notificationBody" class="form-label">Body <span style="color: red;">*</span></label>
+                                <textarea class="form-control" id="notificationBody" name="body" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notificationImage" class="form-label">Image URL (Optional)</label>
+                                <input type="url" class="form-control" id="notificationImage" name="imageUrl">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        getUserData();
+    });
+
+    let table;
+
+    function getUserData() {
+        table = $('#datatable-buttons').DataTable({
+            lengthChange: false,
+            bInfo: true,
+            buttons: [
+                { extend: 'excel', text: 'Export Users' }
+            ]
+        });
+
+        table.buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+        $(".dataTables_length select").addClass('form-select form-select-sm');
+
+        table.clear().draw();
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '<%=urlapi%>getAllusers',
+            success: function (data) {
+                for (var i = data.length - 1; i >= 0; i--) {
+                    const status = data[i].status == 1 
+                        ? '<span class="badge bg-success">Approved</span>' 
+                        : '<span class="badge bg-danger">Rejected</span>';
+                    const fcmToken = data[i].resetToken || '';
+                    const checkbox = '<input type="checkbox" class="sub_chk" data-id="' + data[i].id + '" data-token="' + fcmToken + '">';
+                    const action = '<a style="cursor:pointer;" onclick="viewdata(\'' + data[i].fname + '\',\'' + data[i].lname + '\',\'' + data[i].email + '\',\'' + fcmToken + '\')" data-bs-toggle="modal" data-bs-target="#notificationModal" class="me-3 text-muted"><i class="mdi mdi-bell font-size-18"></i></a>';
+                    // Removed fcmToken from visible columns
+                    table.row.add(['', checkbox, data[i].fname, data[i].lname, data[i].email, status, action]);
+                }
+                table.draw();
+            },
+            error: function (request, status, error) {
+                console.error('Error fetching users:', error);
+            }
+        });
+    }
+
+    $('#master').on('click', function (e) {
+        if ($(this).is(':checked', true)) {
+            $(".sub_chk").prop('checked', true);
+        } else {
+            $(".sub_chk").prop('checked', false);
+        }
+    });
+
+    function sendNotification() {
+        var selectedTokens = [];
+        $(".sub_chk:checked").each(function () {
+            const token = $(this).attr('data-token');
+            if (token) selectedTokens.push(token);
+        });
+
+        if (selectedTokens.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Please select at least one user with an FCM token.'
+            });
+            return;
+        }
+
+        $('#notificationModal').modal('show');
+
+        $('#notificationForm').off('submit').on('submit', function (e) {
+            e.preventDefault();
+            const title = $('#notificationTitle').val().trim();
+            const body = $('#notificationBody').val().trim();
+            const imageUrl = $('#notificationImage').val().trim();
+
+            if (!title || !body) {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Title and Body are required.'
+                });
+                return;
+            }
+
+            Swal.fire({
+                text: "Are you sure you want to send this notification to " + selectedTokens.length + " user(s)?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#4ac18e",
+                cancelButtonColor: "#f46a6a",
+                confirmButtonText: "Send"
+            }).then(function (result) {
+                if (result.value) {
+                    selectedTokens.forEach(token => {
+                        $.ajax({
+                            type: 'POST',
+                            url: '<%=urlapi%>/send-fcm-message',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                token: token,
+                                title: title,
+                                body: body,
+                                imageUrl: imageUrl
+                            }),
+                            success: function (response) {
+                                console.log('Notification sent:', response);
+                            },
+                            error: function (request, status, error) {
+                                console.error('Error sending notification:', error);
+                            }
+                        });
+                    });
+
+                    $('#notificationModal').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Notifications sent successfully to ' + selectedTokens.length + ' users!'
+                    });
+                }
+            });
+        });
+    }
+
+    function viewdata(fname, lname, email, fcmToken) {
+        if (!fcmToken) {
+            Swal.fire({
+                icon: 'error',
+                text: 'No FCM token available for ' + fname + ' ' + lname
+            });
+            return;
+        }
+
+        $('#notificationTitle').val('Message to ' + fname + ' ' + lname);
+        $('#notificationBody').val('Hello ' + fname + ', this is a test notification.');
+        $('#notificationModal').modal('show');
+
+        $('#notificationForm').off('submit').on('submit', function (e) {
+            e.preventDefault();
+            const title = $('#notificationTitle').val().trim();
+            const body = $('#notificationBody').val().trim();
+            const imageUrl = $('#notificationImage').val().trim();
+
+            if (!title || !body) {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Title and Body are required.'
+                });
+                return;
+            }
+
+            Swal.fire({
+                text: "Send notification to " + email + "?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#4ac18e",
+                cancelButtonColor: "#f46a6a",
+                confirmButtonText: "Send"
+            }).then(function (result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<%=urlapi%>/send-fcm-message',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            token: fcmToken,
+                            title: title,
+                            body: body,
+                            imageUrl: imageUrl
+                        }),
+                        success: function (response) {
+                            $('#notificationModal').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                text: 'Notification sent successfully!'
+                            });
+                        },
+                        error: function (request, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                text: 'Failed to send notification: ' + error
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    }
+</script>
+
+<%- contentFor('FooterJs') %>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/public/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+<script src="/public/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/public/assets/libs/jszip/jszip.min.js"></script>
+<script src="/public/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="/public/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/public/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+<script src="/public/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/public/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<%- contentFor('BottomJs') %>

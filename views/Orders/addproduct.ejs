@@ -1,0 +1,155 @@
+<%- contentFor('HeaderCss') %>
+
+<!-- CSS Links -->
+<link href="/public/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+<link href="/public/assets/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
+<link href="/public/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+<script src="//cdn.ckeditor.com/4.5.5/standard/ckeditor.js"></script>
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="alertmsg"></div>
+                <form method="post" class="needs-validation" id="addProductForm" enctype="multipart/form-data" novalidate>
+
+                    <!-- Product Name -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Product Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="productName" id="productName" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Scientific Recommendation -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Scientific Recommendation</label>
+                        <div class="col-sm-9">
+                            <textarea name="scientificRecommendation" id="scientificRecommendation" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Price</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="price" id="price" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Stock -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Stock</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="stock" id="stock" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Image URL -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Image URL</label>
+                        <div class="col-sm-9">
+                            <input type="url" name="imageUrl" id="imageUrl" class="form-control" placeholder="Enter Image URL" required>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Status</label>
+                        <div class="col-sm-9">
+                            <select name="status" id="status" class="form-control">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="row mb-3">
+                        <div>
+                            <button type="button" onclick="addProduct()" class="btn btn-primary">
+                                Submit
+                            </button>
+                            <a href="<%= base %>/products" class="btn btn-secondary">Back</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/public/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<script>
+    // Function to handle form submission
+    function addProduct() {
+        let productName = document.getElementById("productName").value.trim();
+        let description = document.getElementById("description").value.trim();
+        let scientificRecommendation = document.getElementById("scientificRecommendation").value.trim();
+        let price = parseFloat(document.getElementById("price").value.trim()).toFixed(2);
+        let stock = parseInt(document.getElementById("stock").value.trim()) || 0;
+        let imageUrl = document.getElementById("imageUrl").value.trim();
+        let status = document.getElementById("status").value;
+
+        // Check for required fields
+        if (!productName || !description || !price || !imageUrl) {
+            document.getElementById('alertmsg').innerHTML = '<div class="alert alert-danger">Please fill in all required fields.</div>';
+            return;
+        }
+
+        // Prepare data object
+        let data = {
+            productName: productName,
+            description: description,
+            scientificRecommendation: scientificRecommendation,
+            price: price,
+            stock: stock,
+            imageUrl: imageUrl,
+            status: status
+        };
+
+        // Send data to server using AJAX
+        $.ajax({
+            type: 'POST',
+            url: '<%= urlapi %>addproduct',  // Adjust URL as needed
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                document.getElementById('alertmsg').innerHTML = '<div class="alert alert-' + response.status + '">' + response.message + '</div>';
+            },
+            error: function(xhr, status, error) {
+                var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'Unknown error';
+                document.getElementById('alertmsg').innerHTML = '<div class="alert alert-danger">' + errorMessage + '</div>';
+            }
+        });
+    }
+</script>
+
+<%- contentFor('FooterJs') %>
+
+<!-- Additional JS Libraries -->
+<script src="/public/assets/libs/select2/js/select2.min.js"></script>
+<script src="/public/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="/public/assets/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+<script src="/public/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<script src="/public/assets/libs/admin-resources/bootstrap-filestyle/bootstrap-filestyle.min.js"></script>
+<script src="/public/assets/js/pages/form-advanced.init.js"></script>
+
+<%- contentFor('BottomJs') %>
