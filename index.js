@@ -42,7 +42,7 @@ app.use(i18n({
 app.use('/public', express.static('public'));
 
 app.get('/layouts/', function (req, res) {
-  res.render('view');
+  res.render('view', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
 });
 
 // apply controller

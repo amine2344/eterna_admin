@@ -30,6 +30,10 @@ module.exports = function (app) {
 
   // Middleware to make totaldata and other locals available in all views
   app.use((req, res, next) => {
+    // Default to light mode if not set
+    if (req.session.isDarkMode === undefined) {
+        req.session.isDarkMode = true; // Start with light mode
+    }res.locals.theme = req.session.isDarkMode ? 'dark' : 'light'; // Pass theme to views
       res.locals.totaldata = req.session.totaldata || {};
       res.locals.urlapi = urlapi;
       res.locals.base = base;
@@ -40,6 +44,11 @@ module.exports = function (app) {
       };
       next();
   });
+  // Route to toggle dark mode
+  app.post(base + '/toggle-dark-mode', (req, res) => {
+    req.session.isDarkMode = !req.session.isDarkMode; // Toggle the state
+    res.redirect(req.get('referer') || base); // Redirect back to the previous page
+});
 
     function isUserAllowed(req, res, next) {
         sess = req.session;
@@ -148,13 +157,13 @@ module.exports = function (app) {
               req.session.totaldata = responsedatad;
             
             res.locals.title = 'Dashboard';
-            res.render('Dashboard/index');
+            res.render('Dashboard/index', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
     app.get(base + '/adduser', isUserAllowed, function (req, res) {
         res.locals.title = 'Add User';
-        res.render('Users/adduser');
+        res.render('Users/adduser', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/updateuser', isUserAllowed, function (req, res) {
@@ -173,19 +182,19 @@ module.exports = function (app) {
             res.locals.users = responsedata;
             res.locals.id = id;
             res.locals.imagepath = imagepath;
-            res.render('Users/updateuser');
+            res.render('Users/updateuser', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
     app.get(base + '/users', isUserAllowed, function (req, res) {
         res.locals.title = 'User List';
         res.locals.imagepath = imagepath;
-        res.render('Users/index');
+        res.render('Users/index', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/addbanner', isUserAllowed, function (req, res) {
         res.locals.title = 'Add Banner';
-        res.render('Banner/addbanner');
+        res.render('Banner/addbanner', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/editcontact', isUserAllowed, function (req, res) {
@@ -204,7 +213,7 @@ module.exports = function (app) {
             res.locals.title = 'Update Contact';
             res.locals.id = id;
             res.locals.responsetest = responsetest;
-            res.render('Cms/editcontact');
+            res.render('Cms/editcontact', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
@@ -224,7 +233,7 @@ module.exports = function (app) {
             res.locals.title = 'Cms';
             res.locals.id = id;
             res.locals.responsetest = responsetest;
-            res.render('Cms/editcms');
+            res.render('Cms/editcms', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
@@ -244,23 +253,23 @@ module.exports = function (app) {
             res.locals.title = 'Update Faq';
             res.locals.id = id;
             res.locals.responsetest = responsetest;
-            res.render('Cms/editfaq');
+            res.render('Cms/editfaq', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
     app.get(base + '/addcontact', isUserAllowed, function (req, res) {
         res.locals.title = 'Add Contact';
-        res.render('Cms/addcontact');
+        res.render('Cms/addcontact', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/addcms', isUserAllowed, function (req, res) {
         res.locals.title = 'Cms';
-        res.render('Cms/addcms');
+        res.render('Cms/addcms', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/addfaq', isUserAllowed, function (req, res) {
         res.locals.title = 'Add Faq';
-        res.render('Cms/addfaq');
+        res.render('Cms/addfaq', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/updatebanner', isUserAllowed, function (req, res) {
@@ -280,7 +289,7 @@ module.exports = function (app) {
             res.locals.banner = responsedata;
             res.locals.id = id;
             res.locals.imagepath = imagepath;
-            res.render('Banner/editbanner');
+            res.render('Banner/editbanner', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
@@ -297,7 +306,7 @@ module.exports = function (app) {
             var responsedata = JSON.parse(response.body);
             res.locals.title = 'Contact';
             res.locals.contact = responsedata;
-            res.render('Cms/contact');
+            res.render('Cms/contact', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
@@ -314,7 +323,7 @@ module.exports = function (app) {
             var responsedata = JSON.parse(response.body);
             res.locals.title = 'Faq';
             res.locals.faq = responsedata;
-            res.render('Cms/faq');
+            res.render('Cms/faq', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
@@ -339,13 +348,13 @@ module.exports = function (app) {
             }
             res.locals.title = 'Edit Questionnaire';
             res.locals.questionnaire = responsedata.questionnaire;
-            res.render('Cms/edit-questionnaire');
+            res.render('Cms/edit-questionnaire', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
     app.get(base + '/add-questionnaire', isUserAllowed, function (req, res) {
         res.locals.title = 'Add Questionnaire';
-        res.render('Cms/addquestionnaire');
+        res.render('Cms/addquestionnaire', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/questionnaires', isUserAllowed, function (req, res) {
@@ -360,61 +369,61 @@ module.exports = function (app) {
         request(options, function (error, response) {
             if (error) {
                 console.error('Error fetching questionnaires:', error);
-                return res.status(500).send('Error fetching data');
+                return res.status(500).send('Error fetching data', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
             }
             var responsedata = JSON.parse(response.body);
             res.locals.title = 'Questionnaires';
             res.locals.questionnaires = responsedata.questionnaires;
-            res.render('Cms/questionnaires');
+            res.render('Cms/questionnaires', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
     app.get(base + '/cms', isUserAllowed, function (req, res) {
         res.locals.title = 'CMS List';
-        res.render('Cms/cms');
+        res.render('Cms/cms', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/products', isUserAllowed, function (req, res) {
         res.locals.title = 'Products List';
-        res.render('products/products');
+        res.render('products/products', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/addproduct', isUserAllowed, function (req, res) {
         res.locals.title = 'Add Product';
-        res.render('products/addproduct');
+        res.render('products/addproduct', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/notifications', isUserAllowed, function (req, res) {
         res.locals.title = 'Notifications Sender';
-        res.render('notifications/notification');
+        res.render('notifications/notification', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/orders', isUserAllowed, function (req, res) {
         res.locals.title = 'Orders List';
-        res.render('Orders/order');
+        res.render('Orders/order', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/editproduct', isUserAllowed, function (req, res) {
         res.locals.title = 'Edit Product';
-        res.render('products/editproduct');
+        res.render('products/editproduct', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/banner', isUserAllowed, function (req, res) {
         res.locals.title = 'Banner';
         res.locals.imagepath = imagepath;
-        res.render('Banner/index');
+        res.render('Banner/index', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/formations', isUserAllowed, function (req, res) {
         res.locals.title = 'Formations';
         res.locals.imagepath = imagepath;
-        res.render('Formations/index');
+        res.render('Formations/index', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/blog', isUserAllowed, function (req, res) {
         res.locals.title = 'Blog';
         res.locals.imagepath = imagepath;
-        res.render('blog/index');
+        res.render('blog/index', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/addformation', isUserAllowed, function (req, res) {
@@ -443,7 +452,7 @@ module.exports = function (app) {
                 res.locals.title = 'Add Formation';
                 res.locals.categorydata = categorydata;
                 res.locals.userdata = userdata;
-                res.render('Formations/addFormation');
+                res.render('Formations/addFormation', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
             });
         });
     });
@@ -471,7 +480,7 @@ module.exports = function (app) {
                 res.locals.title = 'Add Blog';
                 res.locals.categorydata = categorydata;
                 res.locals.userdata = userdata;
-                res.render('blog/addblog');
+                res.render('blog/addblog', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
             });
         });
     });
@@ -513,7 +522,7 @@ module.exports = function (app) {
                     res.locals.categorydata = categorydata;
                     res.locals.userdata = userdata;
                     res.locals.imagepath = imagepath;
-                    res.render('Formations/editFormation');
+                    res.render('Formations/editFormation', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
                 });
             });
         });
@@ -556,7 +565,7 @@ module.exports = function (app) {
                     res.locals.categorydata = categorydata;
                     res.locals.userdata = userdata;
                     res.locals.imagepath = imagepath;
-                    res.render('blog/editblog');
+                    res.render('blog/editblog', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
                 });
             });
         });
@@ -564,12 +573,12 @@ module.exports = function (app) {
 
     app.get(base + '/manageblogcategory', isUserAllowed, function (req, res) {
         res.locals.title = 'Manage Blog Category';
-        res.render('blog/manageblogcategory');
+        res.render('blog/manageblogcategory', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/addblogcategory', isUserAllowed, function (req, res) {
         res.locals.title = 'Add Blog Category';
-        res.render('blog/addblogcategory');
+        res.render('blog/addblogcategory', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/editblogcategory', isUserAllowed, function (req, res) {
@@ -588,20 +597,20 @@ module.exports = function (app) {
             res.locals.title = 'Edit Blog Category';
             res.locals.catdata = catdata;
             res.locals.id = id;
-            res.render('blog/updateblogcategory');
+            res.render('blog/updateblogcategory', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 
     app.get(base + '/changepassword', isUserAllowed, function (req, res) {
         res.locals.title = 'Change Password';
         res.locals.imagepath = imagepath;
-        res.render('admin/changepassword');
+        res.render('admin/changepassword', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/administrator', isUserAllowed, function (req, res) {
         res.locals.title = 'Administrator List';
         res.locals.imagepath = imagepath;
-        res.render('admin/administrator');
+        res.render('admin/administrator', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
     });
 
     app.get(base + '/editadministrator', isUserAllowed, function (req, res) {
@@ -618,7 +627,7 @@ module.exports = function (app) {
             res.locals.title = 'Administrator Information';
             res.locals.imagepath = imagepath;
             res.locals.admin = admindata;
-            res.render('admin/editadministrator');
+            res.render('admin/editadministrator', { layout: res.locals.theme = req.session.isDarkMode ? 'vertical-dark-layout' :'layout' });
         });
     });
 };
