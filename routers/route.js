@@ -9,6 +9,7 @@ const urlapi = config.url;
 const imagepath = config.imagepath;
 const base = config.base;
 const baseurl = config.url;
+const home = config.landing_page;
 const front = config.front;
 const session = require('express-session');
 const fs = require("fs");
@@ -133,7 +134,51 @@ module.exports = function (app) {
                 });
             });
     });
-
+    // New landing page route
+    // Landing page route (updated to use /landingPageData)
+    app.get(home, function (req, res) {
+        var optionsuser = {
+        method: 'GET',
+        url: urlapi + 'landingPageData',
+        headers: {
+            Cookie: 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
+        }
+        };
+    
+        console.log('Landing page request:', optionsuser);
+    
+        request(optionsuser, function (error, responsed) {
+        if (error) {
+            console.error('Error fetching landingPageData:', error);
+            res.locals.title = 'Lifora';
+            res.render('landing-page/home', {
+            layout: false,
+            totaldata: {},
+            fulldata: {}
+            });
+            return;
+        }
+    
+        try {
+            var responsedatad = JSON.parse(responsed.body);
+            console.log('Landing page API response:', responsedatad);
+            res.locals.title = 'Lifora';
+            res.render('landing-page/home', {
+            layout: false,
+            totaldata: responsedatad.counts || {},
+            fulldata: responsedatad.data || {}
+            });
+        } catch (parseError) {
+            console.error('Error parsing landingPageData response:', parseError);
+            res.locals.title = 'Lifora';
+            res.render('landing-page/home', {
+            layout: false,
+            totaldata: {},
+            fulldata: {}
+            });
+        }
+        });
+    });
     // Dashboard route
     app.get(base, isUserAllowed, function (req, res) {
         var optionsuser = {
@@ -143,7 +188,7 @@ module.exports = function (app) {
                 'Cookie': 'refreshToken=4d981ea4c28df051ba99fcc2ea0a6c7719f0da5c4a454cdc074eba0604dff324184673185db67ecd'
             }
         };
-        
+
         console.log(optionsuser);
         request(optionsuser, function (error, responsed) {
             if (error) {
@@ -152,7 +197,9 @@ module.exports = function (app) {
             }
             
             var responsedatad = JSON.parse(responsed.body);
-              
+            console.log("*************************");
+              console.log(responsedatad);
+
               // Save to session storage
               req.session.totaldata = responsedatad;
             

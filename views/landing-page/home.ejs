@@ -1,0 +1,384 @@
+
+<style>
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'UlmGrotesk', sans-serif;
+}
+
+
+  body {
+    background: #f8f9fa;
+    color: #333;
+  }
+
+  /* Dark mode adjustments */
+  .dark-mode body,
+  .dark-mode .main-content {
+    background: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, #56b7e4, #74af9b);
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .hero p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .download-buttons img {
+    height: 120px;
+    transition: transform 0.2s;
+  }
+
+  .download-buttons img:hover {
+    transform: scale(1.1);
+  }
+
+  /* Stats Section */
+  .stats {
+    padding: 60px 20px;
+    text-align: center;
+    background: white;
+  }
+
+  .dark-mode .stats {
+    background: #2c2c2c;
+  }
+
+  .stats h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .stat-item {
+    padding: 20px;
+  }
+
+  .stat-item span {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #56b7e4;
+    display: block;
+  }
+
+  .dark-mode .stat-item span {
+    color: #56b7e4;
+  }
+
+  .stat-item p {
+    font-size: 1.2rem;
+    color: #666;
+  }
+
+  .dark-mode .stat-item p {
+    color: #b0b0b0;
+  }
+
+  /* Products Section */
+  .products {
+    padding: 60px 20px;
+    background: #f1f3f5;
+  }
+
+  .dark-mode .products {
+    background: #222;
+  }
+
+  .products h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .dark-mode .product-card {
+    background: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .product-card .content {
+    padding: 20px;
+  }
+
+  .product-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  .product-card p.description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .dark-mode .product-card p.description {
+    color: #b0b0b0;
+  }
+
+  .product-card p.price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #74af9b;
+    margin-bottom: 10px;
+  }
+
+  .dark-mode .product-card p.price {
+    color: #56b7e4;
+  }
+
+  .product-card p.stock {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+  }
+
+  .dark-mode .product-card p.stock {
+    color: #b0b0b0;
+  }
+
+  .product-card a {
+    display: inline-block;
+    background: #74af9b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .dark-mode .product-card a {
+    background: #a78bfa;
+  }
+
+  .product-card a:hover {
+    background: #56b7e4;
+  }
+
+  .dark-mode .product-card a:hover {
+    background: #56b7e4;
+  }
+
+  /* About Section */
+  .about {
+    padding: 60px 20px;
+    text-align: center;
+    background: white;
+  }
+
+  .dark-mode .about {
+    background: #2c2c2c;
+  }
+
+  .about h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+
+  .about p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto 30px;
+    color: #666;
+  }
+
+  .dark-mode .about p {
+    color: #b0b0b0;
+  }
+
+  .about a {
+    background: #74af9b;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .dark-mode .about a:hover {
+    background: #56b7e4;
+  }
+
+  .about a:hover {
+    background: #74af9b;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    .hero p {
+      font-size: 1.2rem;
+    }
+    .stats h2, .products h2, .about h2 {
+      font-size: 2rem;
+    }
+    .download-buttons img {
+      height: 100px !important;
+    }
+  }
+</style>
+
+
+<!-- Hero Section -->
+<section class="hero">
+  <h1>Lifora</h1>
+  <p>Discover natural wellness products to elevate your health and lifestyle.</p>
+  <div class="download-buttons">
+    <a href="https://www.apple.com/app-store/" target="_blank">
+      <img src="/public/assets/images/appstore.png"  alt="Download on the App Store">
+    </a>
+    <a href="https://play.google.com/" target="_blank">
+      <img src="/public/assets/images/playstore.png" alt="Get it on Google Play">
+    </a>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+    <h2>Our Impact</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="counter" data-target="<%= totaldata.users || 0 %>">0</span>
+        <p>Customers</p>
+      </div>
+      <div class="stat-item">
+        <span class="counter" data-target="<%= totaldata.orders || 0 %>">0</span>
+        <p>Orders</p>
+      </div>
+      <div class="stat-item">
+        <span class="counter" data-target="<%= totaldata.totalStock || 0 %>">0</span>
+        <p>In Stock</p>
+      </div>
+    </div>
+  </section>
+  
+<!-- Products Section -->
+<section class="products">
+  <h2>Featured Products</h2>
+  <div class="products-grid">
+    <% (fulldata.products || []).forEach(product => { %>
+      <div class="product-card">
+        <img src="<%= product.imageUrl %>" alt="<%= product.productName %>">
+        <div class="content">
+          <h3><%= product.productName %></h3>
+          <p class="description"><%= product.description.substring(0, 60) %>...</p>
+          <!-- <p class="price">$<%= product.price %></p>
+          <p class="stock">Stock: <%= product.stock %></p>
+          <a href="#">Add to Cart</a> -->
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="about">
+  <h2>About Us</h2>
+  <p>
+    Lifora Health is dedicated to providing high-quality natural products.
+    With <%= totaldata.users || 0 %> happy customers,
+    we're passionate about wellness.
+  </p>
+  <a href="#">Learn More</a>
+</section>
+
+
+
+<script>
+  // Debug logs
+  console.log('totalData:', <%- JSON.stringify(totaldata) %>);
+  console.log('fulldata:', <%- JSON.stringify(fulldata) %>);
+
+  // Update stats
+  document.getElementById('totalProducts').innerText = <%- JSON.stringify(totaldata.products || 0) %>;
+  document.getElementById('totalUsers').innerText = <%- JSON.stringify(totaldata.users || 0) %>;
+  document.getElementById('totalOrders').innerText = <%- JSON.stringify(totaldata.orders || 0) %>;
+  document.getElementById('totalStock').innerText = <%- JSON.stringify(totaldata.totalStock || 0) %>;
+  
+</script>
+<script>
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200; // Lower is faster
+  
+    counters.forEach(counter => {
+      const updateCount = () => {
+        const target = +counter.getAttribute('data-target');
+        const count = +counter.innerText;
+  
+        const increment = Math.ceil(target / speed);
+  
+        if (count < target) {
+          counter.innerText = count + increment;
+          setTimeout(updateCount, 20);
+        } else {
+          counter.innerText = target.toLocaleString(); // Optional formatting
+        }
+      };
+  
+      updateCount();
+    });
+  </script>
+  
+

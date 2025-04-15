@@ -6,7 +6,7 @@ Website: https://themesbrand.com/
 Contact: themesbrand@gmail.com
 File: Main Css File
 */
-@import url("https://fonts.googleapis.com/css?family=Roboto:400,500|Source+Sans+Pro:400,600,700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=UlmGrotesk:400,500|Source+Sans+Pro:400,600,700&display=swap");
 #page-topbar {
   position: fixed;
   top: 0;
@@ -17,6 +17,70 @@ File: Main Css File
   -webkit-box-shadow: 0 2px 3px -2px rgba(0, 0, 0, 0.15);
           box-shadow: 0 2px 3px -2px rgba(0, 0, 0, 0.15); }
 
+
+
+          /* CAPTCHA SLIDER */
+          .slider-container {
+            width: 100%;
+            max-width: 300px;
+            margin: auto;
+            position: relative;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            height: 50px;
+            overflow: hidden;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+          }
+        
+          .slider-track {
+            height: 100%;
+            background-color: #d3d3d3;
+            width: 100%;
+            border-radius: 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
+        
+          .slider-button {
+            width: 50px;
+            height: 100%;
+            background-color: #3d7d98;
+            color: white;
+            border: none;
+            cursor: grab;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 50px;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+          }
+        
+          .slider-text {
+            text-align: center;
+            line-height: 50px;
+            font-size: 16px;
+            color: #555;
+            z-index: 1;
+            position: absolute;
+            width: 100%;
+          }
+        
+          .verified {
+            background-color: #a9d7cd !important;
+          }
+          /* END CAPTCHA SLIDER */
+
+          /* FONTS */
+          @font-face {
+            font-family: 'UlmGrotesk' !important;
+            src: url('/public/assets/fonts/UlmGrotesk-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+          }
+          
+          /* END FONTS */
 .navbar-header {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -378,7 +442,7 @@ body[data-layout="horizontal"] .footer {
     content: "\F0140"; }
   #sidebar-menu .has-arrow:after {
     content: "\F0142";
-    font-family: 'Material Design Icons';
+    font-family: 'UlmGrotesk';
     display: block;
     float: left;
     -webkit-transition: -webkit-transform .2s;
@@ -1383,7 +1447,7 @@ body[data-layout="horizontal"][data-layout-size="boxed"] .container-fluid, body[
     display: block;
     font-size: 22px;
     font-weight: 400;
-    font-family: "Roboto", sans-serif; }
+    font-family: "UlmGrotesk", sans-serif; }
 
 .mini-stats-wid .mini-stat-icon {
   overflow: hidden;
@@ -2154,7 +2218,7 @@ input[switch] {
       color: #343a40;
       content: attr(data-off-label);
       display: block;
-      font-family: inherit;
+      font-family: 'UlmGrotesk';
       font-weight: 500;
       font-size: 12px;
       line-height: 21px;
@@ -2547,7 +2611,7 @@ div.dataTables_wrapper div.dataTables_length label {
     outline: none; }
   .table-rep-plugin .checkbox-row input[type="checkbox"]:checked + label::after {
     content: "\f00c";
-    font-family: 'Font Awesome 5 Free';
+    font-family: 'UlmGrotesk';
     font-weight: 900; }
   .table-rep-plugin .checkbox-row input[type="checkbox"]:disabled + label::before {
     background-color: #f7f7f7;
@@ -2576,7 +2640,7 @@ div.dataTables_wrapper div.dataTables_length label {
     border-color: #b9bfc4; }
 
 .morris-charts text {
-  font-family: "Roboto", sans-serif !important;
+  font-family: "UlmGrotesk", sans-serif !important;
   fill: #adb5bd; }
 
 .morris-hover {
@@ -2594,7 +2658,7 @@ div.dataTables_wrapper div.dataTables_length label {
     .morris-hover.morris-default-style .morris-hover-row-label {
       font-weight: bold;
       margin: 0.25em 0;
-      font-family: "Roboto", sans-serif; }
+      font-family: "UlmGrotesk", sans-serif; }
     .morris-hover.morris-default-style .morris-hover-point {
       white-space: nowrap;
       margin: 0.1em 0;
@@ -2712,7 +2776,7 @@ div.dataTables_wrapper div.dataTables_length label {
   background-color: #fff; }
   .c3-tooltip td {
     border-right: none;
-    font-family: "Roboto", sans-serif;
+    font-family: "UlmGrotesk", sans-serif;
     background-color: #fff; }
     .c3-tooltip td > span {
       background: #343a40; }
@@ -2734,7 +2798,7 @@ div.dataTables_wrapper div.dataTables_length label {
   stroke: #ced4da; }
 
 .c3-legend-item {
-  font-family: "Roboto", sans-serif;
+  font-family: "UlmGrotesk", sans-serif;
   font-size: 14px; }
 
 .c3 line, .c3 path {
@@ -2792,7 +2856,7 @@ pre[class*="language-"] {
 
 .dd-list .dd3-handle:before {
   content: "\F35C";
-  font-family: "Material Design Icons";
+  font-family: "UlmGrotesk";
   color: #adb5bd; }
 
 .dd-empty,
@@ -3005,7 +3069,7 @@ pre[class*="language-"] {
   line-height: 24px;
   font-size: 14px;
   padding: 8px 5px;
-  font-family: "Roboto", sans-serif; }
+  font-family: "UlmGrotesk", sans-serif; }
   .mail-list a.active {
     color: #ea553d;
     font-weight: 500; }
@@ -3116,7 +3180,7 @@ pre[class*="language-"] {
       top: 0; }
       .message-list .checkbox-wrapper-mail label:before {
         content: "\F012C";
-        font-family: "Material Design Icons";
+        font-family: "UlmGrotesk";
         top: 0;
         height: 20px;
         color: #292d32;

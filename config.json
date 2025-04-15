@@ -3,6 +3,6 @@
   "imagepath":"/public/assets/images/",
   "url":"https://eterna.website:4000/api/",
   "base_url" : "/",
-  "base" : ""
-  
+  "base" : "/admin",
+  "landing_page":"/home"
 } 

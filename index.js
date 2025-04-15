@@ -6,6 +6,7 @@ var path = require('path');
 var http = require('http').Server(app);
 var validator = require('express-validator');
 const base=config.base;
+const home= config.landing_page;
 
 // import controller
 var AuthController = require('./controllers/AuthController');
@@ -69,8 +70,12 @@ app.use((req,res,next)=>{
     next(); 
 });
 
-
+//views/landing-page/home.ejs
 app.get('/', function (req, res) {
+  res.redirect(home);
+});
+
+app.get('/admin', function (req, res) {
   res.redirect(base);
 });
 

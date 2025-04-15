@@ -6,6 +6,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "node index.js",
+    "watch-css": "sass --watch public/assets/css/app.css:public/assets/css/app.min.css --style=compressed",
+    "build-css": "sass public/assets/css/app.css public/assets/css/app.min.css --style=compressed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -62,6 +64,7 @@
   },
   "repository": {},
   "devDependencies": {
-    "html-webpack-plugin": "^5.6.3"
+    "html-webpack-plugin": "^5.6.3",
+    "sass": "^1.86.3"
   }
 }
